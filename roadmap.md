@@ -1,0 +1,13 @@
+# CureTrack roadmap
+- [ ] Design system + branding (favicon, titles)
+- [ ] Core logic: recovery, outcomes, prioritisation, rule-enforcing actions + tests
+- [ ] Demo store with local persistence + reset
+- [ ] Login / demo role selection
+- [ ] Shell: sidebar, header, notifications
+- [ ] Dashboards (nurse, doctor, admin, head doctor)
+- [ ] Patients list, registration, profile
+- [ ] Temperature recording + corrections
+- [ ] Doctor visits + emergency override
+- [ ] Recovery tracking, discharge, beds
+- [ ] Analytics, audit log, notifications, staff, settings, prioritisation
+- [ ] End-to-end verification

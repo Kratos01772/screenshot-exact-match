@@ -10,33 +10,106 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ConsoleRouteImport } from './routes/_console'
+import { Route as ConsoleDashboardRouteImport } from './routes/_console.dashboard'
+import { Route as ConsoleTemperatureRouteImport } from './routes/_console.temperature'
+import { Route as ConsolePatientsIndexRouteImport } from './routes/_console.patients.index'
+import { Route as ConsolePatientsPatientIdRouteImport } from './routes/_console.patients.$patientId'
+import { Route as ConsolePatientsNewRouteImport } from './routes/_console.patients.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConsoleRoute = ConsoleRouteImport.update({
+  id: '/_console',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConsoleDashboardRoute = ConsoleDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ConsoleRoute,
+} as any)
+const ConsoleTemperatureRoute = ConsoleTemperatureRouteImport.update({
+  id: '/temperature',
+  path: '/temperature',
+  getParentRoute: () => ConsoleRoute,
+} as any)
+const ConsolePatientsIndexRoute = ConsolePatientsIndexRouteImport.update({
+  id: '/patients/',
+  path: '/patients/',
+  getParentRoute: () => ConsoleRoute,
+} as any)
+const ConsolePatientsPatientIdRoute =
+  ConsolePatientsPatientIdRouteImport.update({
+    id: '/patients/$patientId',
+    path: '/patients/$patientId',
+    getParentRoute: () => ConsoleRoute,
+  } as any)
+const ConsolePatientsNewRoute = ConsolePatientsNewRouteImport.update({
+  id: '/patients/new',
+  path: '/patients/new',
+  getParentRoute: () => ConsoleRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof ConsoleDashboardRoute
+  '/temperature': typeof ConsoleTemperatureRoute
+  '/patients/$patientId': typeof ConsolePatientsPatientIdRoute
+  '/patients/new': typeof ConsolePatientsNewRoute
+  '/patients/': typeof ConsolePatientsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof ConsoleDashboardRoute
+  '/temperature': typeof ConsoleTemperatureRoute
+  '/patients/$patientId': typeof ConsolePatientsPatientIdRoute
+  '/patients/new': typeof ConsolePatientsNewRoute
+  '/patients': typeof ConsolePatientsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_console': typeof ConsoleRouteWithChildren
+  '/_console/dashboard': typeof ConsoleDashboardRoute
+  '/_console/temperature': typeof ConsoleTemperatureRoute
+  '/_console/patients/$patientId': typeof ConsolePatientsPatientIdRoute
+  '/_console/patients/new': typeof ConsolePatientsNewRoute
+  '/_console/patients/': typeof ConsolePatientsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/temperature'
+    | '/patients/$patientId'
+    | '/patients/new'
+    | '/patients/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/temperature'
+    | '/patients/$patientId'
+    | '/patients/new'
+    | '/patients'
+  id:
+    | '__root__'
+    | '/'
+    | '/_console'
+    | '/_console/dashboard'
+    | '/_console/temperature'
+    | '/_console/patients/$patientId'
+    | '/_console/patients/new'
+    | '/_console/patients/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConsoleRoute: typeof ConsoleRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +121,73 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_console': {
+      id: '/_console'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ConsoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_console/dashboard': {
+      id: '/_console/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof ConsoleDashboardRouteImport
+      parentRoute: typeof ConsoleRoute
+    }
+    '/_console/temperature': {
+      id: '/_console/temperature'
+      path: '/temperature'
+      fullPath: '/temperature'
+      preLoaderRoute: typeof ConsoleTemperatureRouteImport
+      parentRoute: typeof ConsoleRoute
+    }
+    '/_console/patients/': {
+      id: '/_console/patients/'
+      path: '/patients'
+      fullPath: '/patients/'
+      preLoaderRoute: typeof ConsolePatientsIndexRouteImport
+      parentRoute: typeof ConsoleRoute
+    }
+    '/_console/patients/$patientId': {
+      id: '/_console/patients/$patientId'
+      path: '/patients/$patientId'
+      fullPath: '/patients/$patientId'
+      preLoaderRoute: typeof ConsolePatientsPatientIdRouteImport
+      parentRoute: typeof ConsoleRoute
+    }
+    '/_console/patients/new': {
+      id: '/_console/patients/new'
+      path: '/patients/new'
+      fullPath: '/patients/new'
+      preLoaderRoute: typeof ConsolePatientsNewRouteImport
+      parentRoute: typeof ConsoleRoute
+    }
   }
 }
 
+interface ConsoleRouteChildren {
+  ConsoleDashboardRoute: typeof ConsoleDashboardRoute
+  ConsoleTemperatureRoute: typeof ConsoleTemperatureRoute
+  ConsolePatientsPatientIdRoute: typeof ConsolePatientsPatientIdRoute
+  ConsolePatientsNewRoute: typeof ConsolePatientsNewRoute
+  ConsolePatientsIndexRoute: typeof ConsolePatientsIndexRoute
+}
+
+const ConsoleRouteChildren: ConsoleRouteChildren = {
+  ConsoleDashboardRoute: ConsoleDashboardRoute,
+  ConsoleTemperatureRoute: ConsoleTemperatureRoute,
+  ConsolePatientsPatientIdRoute: ConsolePatientsPatientIdRoute,
+  ConsolePatientsNewRoute: ConsolePatientsNewRoute,
+  ConsolePatientsIndexRoute: ConsolePatientsIndexRoute,
+}
+
+const ConsoleRouteWithChildren =
+  ConsoleRoute._addFileChildren(ConsoleRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConsoleRoute: ConsoleRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
